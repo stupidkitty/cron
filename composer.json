@@ -1,0 +1,22 @@
+{
+    "name": "stupidkitty/cron",
+    "description": "Cron module. Yii2",
+    "type": "yii2-extension",
+    "keywords": ["yii2", "cron", "sheduler"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "AlikDex",
+            "email": "alikdex@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.15",
+        "dragonmantank/cron-expression": "~1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "SK\\CronModule\\": "./src"
+        }
+    }
+}
