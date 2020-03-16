@@ -4,7 +4,6 @@ namespace SK\CronModule\Executor;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use SK\CronModule\Event\Events;
 use SK\CronModule\Event\TaskExecutionEvent;
-use SK\CronModule\Handler\HandlerFactory;
 use SK\CronModule\Handler\HandlerFactoryInterface;
 use SK\CronModule\Model\TaskInterface;
 use SK\CronModule\Scheduler\SchedulerInterface;
@@ -44,6 +43,7 @@ class ScheduledExecutor implements ScheduledExecutorInterface
         $this->scheduler = $scheduler;
         $this->handlerFactory = $handlerFactory;
         $this->eventDispatcher = $eventDispatcher;
+        $this->executionDateTime = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
     }
 
     /**
@@ -89,9 +89,6 @@ class ScheduledExecutor implements ScheduledExecutorInterface
      * The given task passed the run.
      *
      * @param TaskInterface $task
-     * @param mixed $result
-     *
-     * @return TaskExecutionInterface
      */
     private function hasPassed(TaskInterface $task)
     {
@@ -107,9 +104,7 @@ class ScheduledExecutor implements ScheduledExecutorInterface
      * The given task failed the run.
      *
      * @param TaskInterface $task
-     * @param \Exception $exception
-     *
-     * @return TaskExecutionInterface
+     * @param \Throwable $exception
      */
     private function hasFailed(TaskInterface $task, \Throwable $e)
     {
@@ -127,7 +122,7 @@ class ScheduledExecutor implements ScheduledExecutorInterface
      * Finalizes given execution.
      *
      * @param TaskInterface $task
-     * @param int $start
+     * @param int $startedAt
      */
     private function finalize(TaskInterface $task, $startedAt)
     {
