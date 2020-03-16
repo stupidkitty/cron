@@ -1,18 +1,16 @@
 <?php
 namespace SK\CronModule\Handler;
 
-use SK\CronModule\Model\TaskInterface;
-
-class HandlerFactory
+class HandlerFactory implements HandlerFactoryInterface
 {
     /**
-     * Create handler by model
+     * Create handler by class name
      *
-     * @param TaskInterface $task
+     * @param string $classname
      * @return HandlerInterface
      */
-    public static function create(TaskInterface $task)
+    public function create(string $classname): HandlerInterface
     {
-        return new $task->handler;
+        return new $classname;
     }
 }
