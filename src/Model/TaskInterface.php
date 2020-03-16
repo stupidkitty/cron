@@ -32,4 +32,26 @@ interface TaskInterface
      * @return string
      */
     public function getLastExecution();
+
+    /**
+     * Get status value
+     *
+     * @return string
+     */
+    public function getStatus(): string;
+
+    /**
+     * Set status value
+     *
+     * @param string $status
+     * @return void
+     */
+    public function setStatus(string $status);
+
+    /**
+     * Save method (instance of active record need)
+     *
+     * @return void
+     */
+    public function save();
 }

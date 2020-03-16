@@ -18,8 +18,6 @@ use yii\db\ActiveRecord;
  */
 class Task extends ActiveRecord implements TaskInterface
 {
-    public $result;
-
     /**
      * @inheritdoc
      */
@@ -40,7 +38,8 @@ class Task extends ActiveRecord implements TaskInterface
             [['duration'], 'double'],
             [['handler', 'status'], 'string'],
             [['expression'], 'string', 'max' => 24],
-            [['created_at', 'last_execution'], 'safe'],
+            [['created_at', 'last_execution'], 'datetime', 'format' => 'php:Y-m-d H:i:s'],
+            [['created_at'], 'default', 'value' => \gmdate('Y-m-d H:i:s')],
             ['priority', 'default', 'value' => 1000],
         ];
     }
@@ -93,14 +92,13 @@ class Task extends ActiveRecord implements TaskInterface
         return $this->priority;
     }
 
-        /**
+    /**
      * @inheritdoc
      */
     public function setPriority($priority)
     {
         $this->priority = $priority;
     }
-
 
     /**
      * @inheritdoc
@@ -126,7 +124,7 @@ class Task extends ActiveRecord implements TaskInterface
         return $this->duration;
     }
 
-        /**
+    /**
      * @inheritdoc
      */
     public function setDuration($duration)
@@ -137,7 +135,7 @@ class Task extends ActiveRecord implements TaskInterface
     /**
      * @inheritdoc
      */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
@@ -145,7 +143,7 @@ class Task extends ActiveRecord implements TaskInterface
     /**
      * @inheritdoc
      */
-    public function setStatus($status)
+    public function setStatus(string $status)
     {
         $this->status = $status;
     }
