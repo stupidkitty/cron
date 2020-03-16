@@ -1,9 +1,9 @@
 <?php
 namespace SK\CronModule\Command;
 
+use SK\CronModule\Executor\ScheduledExecutorInterface;
+use Yii;
 use yii\console\Controller;
-use SK\CronModule\Model\Task;
-use SK\CronModule\Executor\TaskExecutor;
 
 /**
  * This command echoes the first argument that you have entered.
@@ -16,19 +16,12 @@ class RunController extends Controller
      */
     public function actionIndex()
     {
-        $tasks = Task::find()
-            ->where(['enabled' => true])
-            ->all();
-
-        if (!empty($tasks)) {
-             $runner = new TaskExecutor;
-
-            foreach ($tasks as $task) {
-                $runner->addTask($task);
-            }
-
-            $runner->runTasks();
-        }
+        $sheduledExecutor = $this->get(ScheduledExecutorInterface::class);
+        $sheduledExecutor->run();
     }
 
+    private function get($name)
+    {
+        return Yii::$container->get($name);
+    }
 }
