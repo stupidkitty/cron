@@ -15,18 +15,20 @@ class Module extends BaseModule
      * @inheritdoc
      */
     public $controllerNamespace = 'SK\CronModule\Controller';
-    
+
     /**
      * @inheritdoc
      */
     public $defaultRoute = 'main/index';
-    
+
     /**
      * @inheritdoc
      */
     public function __construct($id, $parent = null, $config = [])
     {
         $this->setViewPath(__DIR__ . '/Resources/views');
+
+        require(__DIR__ . '/bootstrap.php');
 
         parent::__construct ($id, $parent, $config);
     }
