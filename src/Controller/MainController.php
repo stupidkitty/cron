@@ -1,16 +1,16 @@
 <?php
 namespace SK\CronModule\Controller;
 
-use Yii;
-
-use yii\web\Request;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use yii\data\ActiveDataProvider;
-use yii\web\NotFoundHttpException;
+use SK\CronModule\Executor\ScheduledExecutorInterface;
 use SK\CronModule\Model\Task;
-use SK\CronModule\Executor\TaskExecutor;
+use Yii;
+use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\web\Request;
+
 /**
  * MainController implements the CRUD actions for Task model.
  */
@@ -22,15 +22,15 @@ class MainController extends Controller
     public function behaviors()
     {
         return [
-           'access' => [
-               'class' => AccessControl::class,
-               'rules' => [
-                   [
-                       'allow' => true,
-                       'roles' => ['@'],
-                   ],
-               ],
-           ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
@@ -157,7 +157,8 @@ class MainController extends Controller
      */
     public function actionExecTask()
     {
-        $request = Yii::$container->get(Request::class);
+        $request = $this->get(Request::class);
+        $sheduledExecutor = $this->get(ScheduledExecutorInterface::class);
 
         try {
             $id = (int) $request->post('task_id', 0);
@@ -167,16 +168,14 @@ class MainController extends Controller
                 'error' => [
                     'code' => $e->getCode(),
                     'message' => $e->getMessage(),
-                ]
+                ],
             ]);
         }
 
-        $taskExecutor = new TaskExecutor();
-        $taskExecutor->run($task);
+        $sheduledExecutor->execute($task);
 
         return $this->asJson([
             'message' => 'Success',
-            'result' => $task->result,
         ]);
     }
 
@@ -199,5 +198,16 @@ class MainController extends Controller
         }
 
         return $task;
+    }
+
+    /**
+     * Get object from DI container
+     *
+     * @param [type] $name
+     * @return void
+     */
+    public function get($name)
+    {
+        return Yii::$container->get($name);
     }
 }
