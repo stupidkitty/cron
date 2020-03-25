@@ -18,7 +18,7 @@ class TaskScheduler implements SchedulerInterface
     {
         $tasks = Task::find()
             ->where(['enabled' => 1])
-            ->andWhere(['!=', 'status', TaskInterface::STATUS_PLANNED])
+            ->andWhere(['not in', 'status', [TaskInterface::STATUS_PLANNED, TaskInterface::STATUS_RUNNING]])
             ->orderBy(['priority' => SORT_ASC])
             ->all();
 
