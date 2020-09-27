@@ -26,7 +26,7 @@ class ScheduledExecutor implements ScheduledExecutorInterface
      */
     private $eventDispatcher;
     /**
-     * @var DateTimeImmutable
+     * @var \DateTimeImmutable
      */
     private $executionDateTime;
 
@@ -34,6 +34,7 @@ class ScheduledExecutor implements ScheduledExecutorInterface
      * @param SchedulerInterface $scheduler
      * @param HandlerFactoryInterface $handlerFactory
      * @param EventDispatcherInterface $eventDispatcher
+     * @throws \Exception
      */
     public function __construct(
         SchedulerInterface $scheduler,
@@ -48,11 +49,10 @@ class ScheduledExecutor implements ScheduledExecutorInterface
 
     /**
      * @inheritdoc
+     * @throws \Exception
      */
-    public function run()
+    public function run(): void
     {
-        $this->executionDateTime = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
-
         foreach ($this->scheduler->getScheduled() as $task) {
             $this->execute($task);
         }
@@ -62,8 +62,6 @@ class ScheduledExecutor implements ScheduledExecutorInterface
      * Run execution with given handler.
      *
      * @param TaskInterface $task
-     *
-     * @param TaskExecutionInterface $execution
      */
     public function execute(TaskInterface $task)
     {
@@ -96,7 +94,7 @@ class ScheduledExecutor implements ScheduledExecutorInterface
 
         $this->eventDispatcher->dispatch(
             new TaskExecutionEvent($task->task_id, TaskExecutionEvent::TYPE_PASSED),
-            Events::TASK_PASSED,
+            Events::TASK_PASSED
         );
     }
 
@@ -104,7 +102,7 @@ class ScheduledExecutor implements ScheduledExecutorInterface
      * The given task failed the run.
      *
      * @param TaskInterface $task
-     * @param \Throwable $exception
+     * @param \Throwable $e
      */
     private function hasFailed(TaskInterface $task, \Throwable $e)
     {
@@ -114,7 +112,7 @@ class ScheduledExecutor implements ScheduledExecutorInterface
 
         $this->eventDispatcher->dispatch(
             new TaskExecutionEvent($task->task_id, TaskExecutionEvent::TYPE_FAILED),
-            Events::TASK_FAILED,
+            Events::TASK_FAILED
         );
     }
 
@@ -122,16 +120,16 @@ class ScheduledExecutor implements ScheduledExecutorInterface
      * Finalizes given execution.
      *
      * @param TaskInterface $task
-     * @param int $startedAt
+     * @param float $startedAt
      */
-    private function finalize(TaskInterface $task, $startedAt)
+    private function finalize(TaskInterface $task, float $startedAt)
     {
         $task->duration = (\microtime(true) - $startedAt);
         $task->save();
 
         $this->eventDispatcher->dispatch(
             new TaskExecutionEvent($task->task_id, TaskExecutionEvent::TYPE_FINISHED),
-            Events::TASK_FINISHED,
+            Events::TASK_FINISHED
         );
     }
 }
