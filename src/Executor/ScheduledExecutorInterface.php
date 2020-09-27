@@ -9,5 +9,5 @@ interface ScheduledExecutorInterface
     /**
      * Run scheduled tasks.
      */
-    public function run();
+    public function run(): void;
 }
