@@ -18,7 +18,6 @@ class TaskScheduler implements SchedulerInterface
     {
         $tasks = Task::find()
             ->where(['enabled' => 1])
-            ->andWhere(['not in', 'status', [TaskInterface::STATUS_PLANNED, TaskInterface::STATUS_RUNNING]])
             ->orderBy(['priority' => SORT_ASC])
             ->all();
 
@@ -49,24 +48,28 @@ class TaskScheduler implements SchedulerInterface
      * Запланировать таску, если время подошло.
      *
      * @param TaskInterface $task
-     * @return self
+     * @return void
      */
     public function schedule(TaskInterface $task): void
     {
-        $currentTime = new \DateTime('now', new \DateTimeZone('UTC'));
+        try {
+            $currentTime = new \DateTime('now', new \DateTimeZone('UTC'));
 
-        if (empty($task->last_execution)) {
-            $this->addTask($task);
+            if (empty($task->last_execution)) {
+                $this->addTask($task);
 
-            return;
-        }
+                return;
+            }
 
-        $cron = CronExpression::factory($task->expression);
+            $cron = CronExpression::factory($task->expression);
 
-        $nextRunTime = $cron->getNextRunDate($task->last_execution, 0, false, 'U');
+            $nextRunTime = $cron->getNextRunDate($task->last_execution, 0, false, 'U');
 
-        if ($currentTime >= $nextRunTime) {
-            $this->addTask($task);
+            if ($currentTime >= $nextRunTime) {
+                $this->addTask($task);
+            }
+        } catch (\Throwable $e) {
+            echo 'Task cannot be scheduled: ' . $e->getMessage() . PHP_EOL;
         }
     }
 }
