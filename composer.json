@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "yiisoft/yii2": "^2.0",
+        "yiisoft/yii2": "~2.0.38",
         "dragonmantank/cron-expression": "^2.3",
         "symfony/event-dispatcher": "^5.0"
     },
