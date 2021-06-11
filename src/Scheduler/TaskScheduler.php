@@ -7,7 +7,7 @@ use SK\CronModule\Model\TaskInterface;
 
 class TaskScheduler implements SchedulerInterface
 {
-    private $scheduledTasks = [];
+    private array $scheduledTasks = [];
 
     /**
      * Получить все запланированные таски на этот период
