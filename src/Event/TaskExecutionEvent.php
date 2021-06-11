@@ -1,4 +1,5 @@
 <?php
+
 namespace SK\CronModule\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
@@ -12,13 +13,14 @@ class TaskExecutionEvent extends Event
     const TYPE_FAILED = 'failed';
     const TYPE_FINISHED = 'finished';
 
-    protected $taskId;
-    protected $type;
+    protected int $taskId;
+    protected string $type;
 
     /**
      * TaskExecutionEvent constructor
      *
      * @param integer $taskId
+     * @param string $type
      */
     public function __construct(int $taskId, string $type)
     {
@@ -29,7 +31,7 @@ class TaskExecutionEvent extends Event
     /**
      * Get the value of taskId
      */
-    public function getTaskId()
+    public function getTaskId(): int
     {
         return $this->taskId;
     }
@@ -37,7 +39,7 @@ class TaskExecutionEvent extends Event
     /**
      * Get the value of type
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace SK\CronModule\Event;
 
 class Events

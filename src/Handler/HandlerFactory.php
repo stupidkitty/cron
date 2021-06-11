@@ -1,6 +1,12 @@
 <?php
+
 namespace SK\CronModule\Handler;
 
+/**
+ * Class HandlerFactory
+ *
+ * @package SK\CronModule\Handler
+ */
 class HandlerFactory implements HandlerFactoryInterface
 {
     /**

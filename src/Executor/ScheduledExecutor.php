@@ -1,4 +1,5 @@
 <?php
+
 namespace SK\CronModule\Executor;
 
 use Psr\EventDispatcher\EventDispatcherInterface;
@@ -9,26 +10,32 @@ use SK\CronModule\Model\TaskInterface;
 use SK\CronModule\Scheduler\SchedulerInterface;
 
 /**
- * Executes scheduled tasks.
+ * Class ScheduledExecutor
+ * Execute scheduled tasks
+ *
+ * @package SK\CronModule\Executor
  */
 class ScheduledExecutor implements ScheduledExecutorInterface
 {
     /**
      * @var SchedulerInterface
      */
-    private $scheduler;
+    private SchedulerInterface $scheduler;
+
     /**
      * @var HandlerFactoryInterface
      */
-    private $handlerFactory;
+    private HandlerFactoryInterface $handlerFactory;
+
     /**
      * @var EventDispatcherInterface
      */
-    private $eventDispatcher;
+    private EventDispatcherInterface $eventDispatcher;
+
     /**
-     * @var \DateTimeImmutable
+     * @var \DateTimeInterface
      */
-    private $executionDateTime;
+    private \DateTimeInterface $executionDateTime;
 
     /**
      * @param SchedulerInterface $scheduler
@@ -40,11 +47,13 @@ class ScheduledExecutor implements ScheduledExecutorInterface
         SchedulerInterface $scheduler,
         HandlerFactoryInterface $handlerFactory,
         EventDispatcherInterface $eventDispatcher
-    ) {
+    )
+    {
         $this->scheduler = $scheduler;
         $this->handlerFactory = $handlerFactory;
         $this->eventDispatcher = $eventDispatcher;
-        $this->executionDateTime = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $this->executionDateTime = new \DateTime('now', new \DateTimeZone('UTC'));
+        $this->executionDateTime->setTime((int) \gmdate('H'), (int) \gmdate('i'), 0, 0);
     }
 
     /**

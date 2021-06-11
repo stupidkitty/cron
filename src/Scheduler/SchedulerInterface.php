@@ -9,14 +9,14 @@ use SK\CronModule\Model\TaskInterface;
 interface SchedulerInterface
 {
     /**
-     * Ged sheduled tasks collection
+     * Ged scheduled tasks collection
      *
      * @return array
      */
     public function getScheduled(): array;
 
     /**
-     * Shedule the task
+     * Schedule the task
      *
      * @param TaskInterface $task
      * @return void
