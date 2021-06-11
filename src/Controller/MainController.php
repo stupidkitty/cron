@@ -1,15 +1,20 @@
 <?php
+
 namespace SK\CronModule\Controller;
 
 use SK\CronModule\Executor\ScheduledExecutorInterface;
 use SK\CronModule\Model\Task;
-use Yii;
+use Throwable;
+use yii\base\Action;
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Request;
+use yii\web\Response;
 
 /**
  * MainController implements the CRUD actions for Task model.
@@ -19,7 +24,7 @@ class MainController extends Controller
     /**
      * @inheritdoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             'access' => [
@@ -41,11 +46,11 @@ class MainController extends Controller
     }
 
     /**
-     * @param \yii\base\Action $action
-     *
+     * @param Action $action
      * @return bool
+     * @throws BadRequestHttpException
      */
-    public function beforeAction($action)
+    public function beforeAction($action): bool
     {
         if (in_array($action->id, ['exec-task'])) {
             $this->enableCsrfValidation = false;
@@ -57,9 +62,10 @@ class MainController extends Controller
     /**
      * Lists all Task models.
      *
-     * @return mixed
+     * @param int $page
+     * @return string
      */
-    public function actionIndex($page = 0)
+    public function actionIndex(int $page = 0): string
     {
         $dataProvider = new ActiveDataProvider([
             'query' => Task::find(),
@@ -78,10 +84,10 @@ class MainController extends Controller
      * Displays a single Task model.
      *
      * @param integer $id
-     *
-     * @return mixed
+     * @return string
+     * @throws NotFoundHttpException
      */
-    public function actionView($id)
+    public function actionView(int $id): string
     {
         $task = $this->findById($id);
 
@@ -94,12 +100,11 @@ class MainController extends Controller
      * Creates a new Task model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      *
-     * @return mixed
+     * @return string|Response
      */
-    public function actionCreate()
+    public function actionCreate(Request $request)
     {
-        $request = Yii::$container->get(Request::class);
-        $model = new Task;
+        $model = new Task();
 
         if ($model->load($request->post()) && $model->save()) {
             return $this->redirect(['index']);
@@ -114,13 +119,13 @@ class MainController extends Controller
      * Updates an existing Task model.
      * If update is successful, the browser will be redirected to the 'view' page.
      *
+     * @param Request $request
      * @param integer $id
-     *
-     * @return mixed
+     * @return Response|string
+     * @throws NotFoundHttpException
      */
-    public function actionUpdate($id)
+    public function actionUpdate(Request $request, int $id)
     {
-        $request = Yii::$container->get(Request::class);
         $task = $this->findById($id);
 
         if ($task->load($request->post()) && $task->save()) {
@@ -138,12 +143,14 @@ class MainController extends Controller
      * If deletion is successful, the browser will be redirected to the 'index' page.
      *
      * @param integer $id
-     *
-     * @return mixed
+     * @return Response
      */
-    public function actionDelete($id)
+    public function actionDelete(int $id): Response
     {
-        $this->findById($id)->delete();
+        try {
+            $this->findById($id)->delete();
+        } catch (StaleObjectException | NotFoundHttpException | Throwable $e) {
+        }
 
         return $this->redirect(['index']);
     }
@@ -151,15 +158,12 @@ class MainController extends Controller
     /**
      * Выполняет выбранную задачу немедленно.
      *
-     * @param integer $id
-     *
-     * @return mixed
+     * @param Request $request
+     * @param ScheduledExecutorInterface $sheduledExecutor
+     * @return Response
      */
-    public function actionExecTask()
+    public function actionExecTask(Request $request, ScheduledExecutorInterface $sheduledExecutor): Response
     {
-        $request = $this->get(Request::class);
-        $sheduledExecutor = $this->get(ScheduledExecutorInterface::class);
-
         try {
             $id = (int) $request->post('task_id', 0);
             $task = $this->findById($id);
@@ -183,13 +187,11 @@ class MainController extends Controller
      * Finds the Task model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      *
-     * @param integer $id
-     *
+     * @param int $id
      * @return Task the loaded model
-     *
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findById($id)
+    protected function findById(int $id): Task
     {
         $task = Task::findOne($id);
 
@@ -198,16 +200,5 @@ class MainController extends Controller
         }
 
         return $task;
-    }
-
-    /**
-     * Get object from DI container
-     *
-     * @param [type] $name
-     * @return void
-     */
-    public function get($name)
-    {
-        return Yii::$container->get($name);
     }
 }
