@@ -13,10 +13,10 @@ use yii\console\Controller;
 class RunController extends Controller
 {
     /**
-     * @param ScheduledExecutorInterface $sheduledExecutor
+     * @param ScheduledExecutorInterface $scheduledExecutor
      */
-    public function actionIndex(ScheduledExecutorInterface $sheduledExecutor)
+    public function actionIndex(ScheduledExecutorInterface $scheduledExecutor)
     {
-        $sheduledExecutor->run();
+        $scheduledExecutor->run();
     }
 }
