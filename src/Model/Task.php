@@ -21,7 +21,7 @@ class Task extends ActiveRecord implements TaskInterface
     /**
      * @inheritdoc
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%cron_tasks}}';
     }
@@ -29,7 +29,7 @@ class Task extends ActiveRecord implements TaskInterface
     /**
      * @inheritdoc
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['expression', 'handler'], 'required'],
@@ -44,57 +44,57 @@ class Task extends ActiveRecord implements TaskInterface
         ];
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->task_id;
     }
 
-    public function getExpression()
+    public function getExpression(): string
     {
         return $this->expression;
     }
 
-    public function setExpression($expression)
+    public function setExpression(string $expression)
     {
         $this->expression = $expression;
     }
 
-    public function getHandler()
+    public function getHandler(): string
     {
         return $this->handler;
     }
 
-    public function setHandler($handler)
+    public function setHandler(string $handler)
     {
         $this->handler = $handler;
     }
 
-    public function getPriority()
+    public function getPriority(): int
     {
         return $this->priority;
     }
 
-    public function setPriority($priority)
+    public function setPriority(int $priority)
     {
         $this->priority = $priority;
     }
 
-    public function getLastExecution()
+    public function getLastExecution(): string
     {
         return $this->last_execution;
     }
 
-    public function setLastExecution($last_execution)
+    public function setLastExecution(string $lastExecutionTime)
     {
-        $this->last_execution = $last_execution;
+        $this->last_execution = $lastExecutionTime;
     }
 
-    public function getDuration()
+    public function getDuration(): float
     {
         return $this->duration;
     }
 
-    public function setDuration($duration)
+    public function setDuration(float $duration)
     {
         $this->duration = $duration;
     }
@@ -150,20 +150,12 @@ class Task extends ActiveRecord implements TaskInterface
         $this->enabled = false;
     }
 
-    /**
-     * Возвращает время создания таски.
-     *
-     * @return string
-     */
-    public function getCreatedAt()
+    function getCreatedAt(): string
     {
         return $this->created_at;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function setCreatedAt($created_at)
+    public function setCreatedAt(string $created_at)
     {
         $this->created_at = $created_at;
     }

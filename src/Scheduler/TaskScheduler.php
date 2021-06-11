@@ -38,22 +38,6 @@ class TaskScheduler implements SchedulerInterface
     }
 
     /**
-     * Добавить таску в запланированные.
-     *
-     * @param TaskInterface $task
-     * @return self
-     */
-    public function addTask(TaskInterface $task): self
-    {
-        $task->setStatus(TaskInterface::STATUS_PLANNED);
-        $task->save();
-
-        $this->scheduledTasks[] = $task;
-
-        return $this;
-    }
-
-    /**
      * Запланировать таску, если время подошло.
      *
      * @param TaskInterface $task
@@ -80,5 +64,21 @@ class TaskScheduler implements SchedulerInterface
         } catch (\Throwable $e) {
             echo 'Task cannot be scheduled: ' . $e->getMessage() . PHP_EOL;
         }
+    }
+
+    /**
+     * Добавить таску в запланированные.
+     *
+     * @param TaskInterface $task
+     * @return self
+     */
+    public function addTask(TaskInterface $task): self
+    {
+        $task->setStatus(TaskInterface::STATUS_PLANNED);
+        $task->save();
+
+        $this->scheduledTasks[] = $task;
+
+        return $this;
     }
 }

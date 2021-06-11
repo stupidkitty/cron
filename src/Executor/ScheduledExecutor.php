@@ -11,7 +11,7 @@ use SK\CronModule\Scheduler\SchedulerInterface;
 
 /**
  * Class ScheduledExecutor
- * Execute sheduled tasks
+ * Execute scheduled tasks
  *
  * @package SK\CronModule\Executor
  */

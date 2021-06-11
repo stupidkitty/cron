@@ -1,4 +1,5 @@
 <?php
+
 namespace SK\CronModule\Model;
 
 /**
@@ -17,21 +18,21 @@ interface TaskInterface
      *
      * @return null|integer
      */
-    public function getId();
+    public function getId(): ?int;
 
     /**
      * Returns task handler.
      *
      * @return string
      */
-    public function getHandler();
+    public function getHandler(): string;
 
     /**
      * Returns last-execution datetime.
      *
      * @return string
      */
-    public function getLastExecution();
+    public function getLastExecution(): string;
 
     /**
      * Get status value

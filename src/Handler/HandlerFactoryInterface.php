@@ -1,4 +1,5 @@
 <?php
+
 namespace SK\CronModule\Handler;
 
 /**
@@ -9,7 +10,8 @@ interface HandlerFactoryInterface
     /**
      * Create handler.
      *
-     * @return void
+     * @param string $classname
+     * @return HandlerInterface
      */
     public function create(string $classname): HandlerInterface;
 }

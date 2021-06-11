@@ -1,10 +1,12 @@
 <?php
+
 namespace SK\CronModule;
 
 use Yii;
-use yii\i18n\PhpMessageSource;
+use yii\base\InvalidConfigException;
 use yii\base\Module as BaseModule;
 use yii\console\Application as ConsoleApplication;
+use yii\i18n\PhpMessageSource;
 
 /**
  * This is the main module class of the video extension.
@@ -30,11 +32,12 @@ class Module extends BaseModule
 
         require(__DIR__ . '/bootstrap.php');
 
-        parent::__construct ($id, $parent, $config);
+        parent::__construct($id, $parent, $config);
     }
 
     /**
      * @inheritdoc
+     * @throws InvalidConfigException
      */
     public function init()
     {
