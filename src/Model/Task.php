@@ -14,7 +14,7 @@ use yii\db\ActiveRecord;
  * @property double $duration
  * @property integer $status
  * @property boolean $enabled
- * @property timestamp $created_at
+ * @property string $created_at
  */
 class Task extends ActiveRecord implements TaskInterface
 {
@@ -23,7 +23,7 @@ class Task extends ActiveRecord implements TaskInterface
      */
     public static function tableName()
     {
-        return 'cron_tasks';
+        return '{{%cron_tasks}}';
     }
 
     /**
@@ -44,105 +44,66 @@ class Task extends ActiveRecord implements TaskInterface
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getId()
     {
         return $this->task_id;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getExpression()
     {
         return $this->expression;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function setExpression($expression)
     {
         $this->expression = $expression;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getHandler()
     {
         return $this->handler;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function setHandler($handler)
     {
         $this->handler = $handler;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getPriority()
     {
         return $this->priority;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function setPriority($priority)
     {
         $this->priority = $priority;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getLastExecution()
     {
         return $this->last_execution;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function setLastExecution($last_execution)
     {
         $this->last_execution = $last_execution;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getDuration()
     {
         return $this->duration;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function setDuration($duration)
     {
         $this->duration = $duration;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function setStatus(string $status)
     {
         $this->status = $status;
@@ -153,7 +114,7 @@ class Task extends ActiveRecord implements TaskInterface
      *
      * @return boolean
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -164,9 +125,9 @@ class Task extends ActiveRecord implements TaskInterface
      * @param boolean|null $enabled
      * @return void
      */
-    public function setEnabled($enabled)
+    public function setEnabled(bool $enabled)
     {
-        $this->enabled = (bool) $enabled;
+        $this->enabled = $enabled;
     }
 
     /**

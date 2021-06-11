@@ -1,12 +1,21 @@
 <?php
+
 namespace SK\CronModule\Scheduler;
 
 use Cron\CronExpression;
 use SK\CronModule\Model\Task;
 use SK\CronModule\Model\TaskInterface;
 
+/**
+ * Class TaskScheduler
+ *
+ * @package SK\CronModule\Scheduler
+ */
 class TaskScheduler implements SchedulerInterface
 {
+    /**
+     * @var array
+     */
     private array $scheduledTasks = [];
 
     /**
@@ -55,15 +64,15 @@ class TaskScheduler implements SchedulerInterface
         try {
             $currentTime = new \DateTime('now', new \DateTimeZone('UTC'));
 
-            if (empty($task->last_execution)) {
+            if ($task->last_execution === null || $task->last_execution === '') {
                 $this->addTask($task);
 
                 return;
             }
 
-            $cron = CronExpression::factory($task->expression);
-
-            $nextRunTime = $cron->getNextRunDate($task->last_execution, 0, false, 'U');
+            $cron = new CronExpression($task->expression);
+            $lastExecution = \DateTime::createFromFormat('Y-m-d H:i:s', $task->last_execution, new \DateTimeZone('UTC'));
+            $nextRunTime = $cron->getNextRunDate($lastExecution, 0, false, 'UTC');
 
             if ($currentTime >= $nextRunTime) {
                 $this->addTask($task);
